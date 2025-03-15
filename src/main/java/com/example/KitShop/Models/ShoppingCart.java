@@ -2,11 +2,15 @@ package com.example.KitShop.Models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Data
+@Setter
+@Getter
 @Table(name = "shopping_cart")
 public class ShoppingCart {
     @Id

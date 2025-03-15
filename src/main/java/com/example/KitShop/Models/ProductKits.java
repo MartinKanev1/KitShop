@@ -34,12 +34,16 @@ public class ProductKits {
     @Column(nullable = false)
     private String teamNameOfKit;
 
+
+    @Column(name = "kit_size")
+    private String size;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "club_type")
     private ClubType type;
 
     @Column(name = "stock_quantity", nullable = false)
-    private int stockQuantity;
+    private int quantity;
 
     @Column(name = "image_url")
     private String imageUrl;

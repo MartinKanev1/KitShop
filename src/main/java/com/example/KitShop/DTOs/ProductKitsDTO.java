@@ -12,7 +12,9 @@ public record ProductKitsDTO(
         BigDecimal price,
         String playerNameOnKit,
         String teamNameOfKit,
+        String size,
         ClubType type,
+        int quantity,
         String imageUrl
 ) {
 }
