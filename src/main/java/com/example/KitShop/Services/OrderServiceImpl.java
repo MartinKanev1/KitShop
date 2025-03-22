@@ -45,48 +45,9 @@ public class OrderServiceImpl implements OrderService{
         this.shoppingCartServiceImpl =shoppingCartServiceImpl;
     }
 
-    /*
-    public OrdersDTO buyProduct(Long userId, Long productId, int quantity)  {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+    
 
-        ProductKits product = productKitsRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
-
-        if (product.getQuantity() < quantity) {
-            throw new RuntimeException("Not enough stock available");
-        }
-
-
-        Orders order = new Orders();
-        order.setUser(user);
-        order.setStatus("PENDING");
-        order.setTotalAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
-        order.setCreatedAt(LocalDateTime.now());
-
-        OrderItem orderItem = new OrderItem();
-        orderItem.setOrder(order);
-        orderItem.setProduct(product);
-        orderItem.setQuantity(quantity);
-        orderItem.setPriceAtTimeOfPurchase(product.getPrice().doubleValue());
-
-        if (order.getOrderItems() == null) {
-            order.setOrderItems(new ArrayList<>());
-        }
-        order.getOrderItems().add(orderItem);
-
-        ordersRepository.save(order);
-
-        orderItemRepository.save(orderItem);
-
-        product.setQuantity(product.getQuantity() - quantity);
-        productKitsRepository.save(product);
-
-        return ordersMapper.toDTO(order);
-    }
-    */
-
-    public OrdersDTO buyProduct(Long userId, Long productId, int quantity) {
+    public OrdersDTO buyProduct(Long userId, Long productId, int quantity, String shippingAddress) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
@@ -101,6 +62,7 @@ public class OrderServiceImpl implements OrderService{
         Orders order = new Orders();
         order.setUser(user);
         order.setStatus("PENDING");
+        order.setAddress(shippingAddress);
         order.setTotalAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
         order.setCreatedAt(LocalDateTime.now());
 
@@ -132,7 +94,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Transactional
-    public OrdersDTO checkout(Long userId) {
+    public OrdersDTO checkout(Long userId, String shippingAddress) {
         // Fetch user
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
@@ -154,6 +116,7 @@ public class OrderServiceImpl implements OrderService{
         order.setUser(user);
         order.setStatus("PENDING");
         order.setCreatedAt(LocalDateTime.now());
+        order.setAddress(shippingAddress);
         order.setOrderItems(new ArrayList<>()); // Initialize order items list
 
         BigDecimal totalAmount = BigDecimal.ZERO; // Track total order cost

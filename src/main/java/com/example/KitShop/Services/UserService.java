@@ -12,7 +12,7 @@ public interface UserService {
 
     Long getUserIdFromEmail(String email);
 
-    UserDTO createUser(UserDTO userDTO);
+//    UserDTO createUser(UserDTO userDTO);
 
     void deleteUser(Long userId);
 

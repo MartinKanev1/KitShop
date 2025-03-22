@@ -17,8 +17,8 @@ public class CacheConfig {
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager("searchProductsCache");
         cacheManager.setCaffeine(Caffeine.newBuilder()
-                .expireAfterWrite(10, TimeUnit.MINUTES) // Cache expires after 10 minutes
-                .maximumSize(100) // Maximum 100 entries
+                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .maximumSize(100)
         );
         return cacheManager;
     }

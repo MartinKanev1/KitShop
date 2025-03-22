@@ -19,9 +19,9 @@ public class OrdersController {
     }
 
     @PostMapping("/buy")
-    public ResponseEntity<OrdersDTO> buyProduct(@RequestParam Long userId,@RequestParam  Long productId, int quantity) {
+    public ResponseEntity<OrdersDTO> buyProduct(@RequestParam Long userId,@RequestParam  Long productId, @RequestParam String shippingAddress,int quantity) {
         try {
-            OrdersDTO order = ordersService.buyProduct(userId, productId, quantity);
+            OrdersDTO order = ordersService.buyProduct(userId, productId, quantity,shippingAddress);
             return ResponseEntity.ok(order);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -57,12 +57,12 @@ public class OrdersController {
     }
 
     @PostMapping("/checkout/{userId}")
-    public ResponseEntity<OrdersDTO> checkout(@PathVariable Long userId) {
+    public ResponseEntity<OrdersDTO> checkout(@PathVariable Long userId, @RequestParam String shippingAddress) {
         try {
-            OrdersDTO orderDTO = ordersService.checkout(userId);
-            return ResponseEntity.ok(orderDTO); // Return success response with order details
+            OrdersDTO orderDTO = ordersService.checkout(userId, shippingAddress);
+            return ResponseEntity.ok(orderDTO);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null); // Handle errors (e.g., empty cart, insufficient stock)
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

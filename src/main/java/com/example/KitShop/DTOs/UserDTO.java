@@ -10,7 +10,6 @@ public record UserDTO(
     String lastName,
     String email,
     String password,
-    String address,
     String phoneNumber,
     Roles role
 

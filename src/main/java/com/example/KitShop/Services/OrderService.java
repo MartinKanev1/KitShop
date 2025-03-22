@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface OrderService {
 
-    OrdersDTO buyProduct(Long userId, Long productId, int quantity);
+    OrdersDTO buyProduct(Long userId, Long productId, int quantity,String shippingAddress);
 
     List<OrderItemDTO> getOrderItemsByOrderId(Long orderId);
 

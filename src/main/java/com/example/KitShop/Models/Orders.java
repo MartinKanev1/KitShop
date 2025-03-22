@@ -29,6 +29,9 @@ public class Orders {
     @Column(nullable = false)
     private String status;
 
+    @Column(nullable = false)
+    private String address;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 

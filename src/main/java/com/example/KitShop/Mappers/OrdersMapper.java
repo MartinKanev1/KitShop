@@ -13,6 +13,7 @@ public interface OrdersMapper {
     @Mapping(target = "user.userId", source = "dto.userId")
     @Mapping(target = "orderItems", source = "dto.orderItems")
     @Mapping(target = "status", source = "dto.status")
+    @Mapping(target = "address", source = "dto.address")
     @Mapping(target = "totalAmount", source = "dto.totalAmount")
     @Mapping(target = "createdAt", source = "dto.createdAt")
 
