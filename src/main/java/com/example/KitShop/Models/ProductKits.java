@@ -6,10 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
-@Data
+//@Data
 @Entity
 @Setter
 @Getter
@@ -34,19 +37,15 @@ public class ProductKits {
     @Column(nullable = false)
     private String teamNameOfKit;
 
-
-    @Column(name = "kit_size")
-    private String size;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "club_type")
     private ClubType type;
 
-    @Column(name = "stock_quantity", nullable = false)
-    private int quantity;
-
     @Column(name = "image_url")
     private String imageUrl;
+
+    @OneToMany(mappedBy = "productKit", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductKitSizeQuantities> sizes;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
@@ -56,5 +55,23 @@ public class ProductKits {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems;
+
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Favourite> favourites;
+
+
+
+    @Override
+    public String toString() {
+        return "ProductKits{" +
+                "id=" + productKitId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", teamName='" + teamNameOfKit + '\'' +
+                // Don't include sizeQuantities
+                '}';
+    }
+
 
 }

@@ -3,6 +3,8 @@ package com.example.KitShop.DTOs;
 import com.example.KitShop.Models.ClubType;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 public record ProductKitsDTO(
 
@@ -12,9 +14,8 @@ public record ProductKitsDTO(
         BigDecimal price,
         String playerNameOnKit,
         String teamNameOfKit,
-        String size,
         ClubType type,
-        int quantity,
+        List<ProductKitSizeQuantitiesDTO> sizes,
         String imageUrl
 ) {
 }

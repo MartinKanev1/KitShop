@@ -4,6 +4,7 @@ public record CartItemDTO(
 
         Long cartItemId,
         Long productId,
+        String size,
         int quantity
 
 

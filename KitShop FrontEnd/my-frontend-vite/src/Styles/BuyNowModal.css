@@ -1,0 +1,109 @@
+
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 5rem; /* 🪄 this keeps it below your header */
+    z-index: 999;
+  }
+  
+/*   
+  .modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 450px;
+    max-width: 90%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  } */
+
+  .modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 450px;
+    max-width: 90%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    
+    /* New styles for scroll handling */
+    max-height: 80vh; /* This ensures the modal doesn't grow too tall */
+    overflow-y: auto; /* Allows scrolling when content overflows */
+    box-sizing: border-box; /* Prevents padding from causing overflow */
+  }
+  
+  .modal-content h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  .modal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .modal-section label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .modal-section textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+  }
+  
+  .modal-buttons button {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  .modal-buttons button:first-child {
+    background-color: #10b981;
+    color: white;
+  }
+  
+  .modal-buttons button:first-child:hover {
+    background-color: #059669;
+  }
+  
+  .modal-buttons button:last-child {
+    background-color: #e5e7eb;
+    color: #333;
+  }
+  
+  .modal-buttons button:last-child:hover {
+    background-color: #d1d5db;
+  }
+  

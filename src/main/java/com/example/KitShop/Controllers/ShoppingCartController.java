@@ -19,8 +19,8 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ShoppingCartDTO> addProductToCart(@RequestParam Long userId, @RequestParam Long productId) {
-        ShoppingCartDTO updatedCart = shoppingCartServiceImpl.addProductToCart(userId, productId);
+    public ResponseEntity<ShoppingCartDTO> addProductToCart(@RequestParam Long userId, @RequestParam Long productId,@RequestParam String size,@RequestParam int quantity) {
+        ShoppingCartDTO updatedCart = shoppingCartServiceImpl.addProductToCart(userId, productId, size, quantity);
         return ResponseEntity.ok(updatedCart);
     }
 

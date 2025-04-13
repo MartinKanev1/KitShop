@@ -1,5 +1,6 @@
 package com.example.KitShop.Controllers;
 
+import com.example.KitShop.DTOs.FullOrderDTO;
 import com.example.KitShop.DTOs.OrderItemDTO;
 import com.example.KitShop.DTOs.OrdersDTO;
 import com.example.KitShop.Services.OrderServiceImpl;
@@ -18,15 +19,20 @@ public class OrdersController {
         this.ordersService = ordersService;
     }
 
+
     @PostMapping("/buy")
-    public ResponseEntity<OrdersDTO> buyProduct(@RequestParam Long userId,@RequestParam  Long productId, @RequestParam String shippingAddress,int quantity) {
+    public ResponseEntity<OrdersDTO> buyProduct(@RequestParam Long userId,@RequestParam  Long productId,@RequestParam String size ,@RequestParam String shippingAddress, @RequestParam int quantity) {
         try {
-            OrdersDTO order = ordersService.buyProduct(userId, productId, quantity,shippingAddress);
+            OrdersDTO order = ordersService.buyProduct(userId, productId, size  ,quantity,shippingAddress);
             return ResponseEntity.ok(order);
         } catch (Exception e) {
+            System.out.println("🛑 Error while processing buy request: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+
 
     @GetMapping("/{orderId}/items")
     public ResponseEntity<List<OrderItemDTO>> getOrderItemsByOrderId(@PathVariable Long orderId) {
@@ -41,7 +47,7 @@ public class OrdersController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         try {
             ordersService.deleteOrder(id);
             return ResponseEntity.noContent().build();
@@ -56,6 +62,7 @@ public class OrdersController {
         return ResponseEntity.ok(productId);
     }
 
+
     @PostMapping("/checkout/{userId}")
     public ResponseEntity<OrdersDTO> checkout(@PathVariable Long userId, @RequestParam String shippingAddress) {
         try {
@@ -65,6 +72,28 @@ public class OrdersController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping("/AllUserOrders/{userId}")
+    public ResponseEntity<List<FullOrderDTO>> getMyOrdersForTest(@PathVariable Long userId) {
+
+        List<FullOrderDTO> orders = ordersService.getAllOrdersWithDetailsByUserId(userId);
+        return ResponseEntity.ok(orders);
+
+
+    }
+
+    @PostMapping("/{orderId}/cancel")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
+        try {
+            ordersService.cancelOrder(orderId);
+            return ResponseEntity.ok("Order canceled successfully");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel order");
+        }
+    }
+
 
 
 }

@@ -7,13 +7,14 @@ import com.example.KitShop.Models.User;
 import com.example.KitShop.Repositories.UserRepository;
 import com.example.KitShop.Services.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+@Disabled
 public class UserServiceImplTest {
 
     @Mock

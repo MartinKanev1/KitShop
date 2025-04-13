@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface ShoppingCartService {
 
-    ShoppingCartDTO addProductToCart(Long userId, Long productId);
+    ShoppingCartDTO addProductToCart(Long userId, Long productId, String size, int quantity);
 
     ShoppingCartDTO removeProductFromCart(Long userId, Long cartItemId);
 

@@ -4,10 +4,7 @@ import com.example.KitShop.DTOs.CartItemDTO;
 import com.example.KitShop.DTOs.ShoppingCartDTO;
 import com.example.KitShop.Mappers.CartItemMapper;
 import com.example.KitShop.Mappers.ShoppingCartMapper;
-import com.example.KitShop.Models.CartItem;
-import com.example.KitShop.Models.ProductKits;
-import com.example.KitShop.Models.ShoppingCart;
-import com.example.KitShop.Models.User;
+import com.example.KitShop.Models.*;
 import com.example.KitShop.Repositories.CartItemRepository;
 import com.example.KitShop.Repositories.ProductKitsRepository;
 import com.example.KitShop.Repositories.ShoppingCartRepository;
@@ -38,13 +35,62 @@ public class ShoppingCartServiceImpl implements  ShoppingCartService{
         this.cartItemMapper=cartItemMapper;
     }
 
-    public ShoppingCartDTO addProductToCart(Long userId, Long productId) {
+
+
+//    public ShoppingCartDTO addProductToCart(Long userId, Long productId, String size, int quantity) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+//
+//        ProductKits product = productKitsRepository.findById(productId)
+//                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
+//
+//        ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
+//                .orElseGet(() -> {
+//                    ShoppingCart newCart = new ShoppingCart();
+//                    newCart.setUser(user);
+//                    return shoppingCartRepository.save(newCart);
+//                });
+//
+//        // Check if the cart item already exists
+//        Optional<CartItem> existingCartItem = cartItemRepository
+//                .findByShoppingCartAndProductAndSize(shoppingCart, product, size);
+//
+//        if (existingCartItem.isPresent()) {
+//            CartItem cartItem = existingCartItem.get();
+//            cartItem.setQuantity(cartItem.getQuantity() + quantity); // Update quantity
+//            cartItemRepository.save(cartItem);
+//        } else {
+//            // Add a new cart item
+//            CartItem newCartItem = new CartItem();
+//            newCartItem.setShoppingCart(shoppingCart);
+//            newCartItem.setProduct(product);
+//            newCartItem.setSize(size);
+//            newCartItem.setQuantity(quantity);
+//            cartItemRepository.save(newCartItem);
+//        }
+//
+//        return shoppingCartMapper.toDTO(shoppingCart);
+//    }
+
+
+    public ShoppingCartDTO addProductToCart(Long userId, Long productId, String size, int quantity) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
         ProductKits product = productKitsRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
 
+        String normalizedSize = size.trim().toUpperCase();
+
+        // 🔍 Find the specific size entry for the product
+        ProductKitSizeQuantities sizeEntry = product.getSizes().stream()
+                .filter(s -> s.getSize() != null && s.getSize().trim().equalsIgnoreCase(normalizedSize))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Size '" + size + "' not available for this product."));
+
+        int availableStock = sizeEntry.getQuantity();
+
+        // Get or create the user's shopping cart
         ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
                 .orElseGet(() -> {
                     ShoppingCart newCart = new ShoppingCart();
@@ -52,24 +98,34 @@ public class ShoppingCartServiceImpl implements  ShoppingCartService{
                     return shoppingCartRepository.save(newCart);
                 });
 
+        // Check if the item is already in the cart
+        Optional<CartItem> existingCartItem = cartItemRepository
+                .findByShoppingCartAndProductAndSize(shoppingCart, product, normalizedSize);
 
-            // Add a new cart item if the product is not in the cart
-            CartItem cartItem = new CartItem();
-            cartItem.setShoppingCart(shoppingCart);
-            cartItem.setProduct(product);
-            cartItem.setQuantity(1);
+        int currentQuantityInCart = existingCartItem.map(CartItem::getQuantity).orElse(0);
+        int newTotalRequested = currentQuantityInCart + quantity;
+
+        if (newTotalRequested > availableStock) {
+            throw new RuntimeException("Only " + availableStock + " items available in size '" + normalizedSize + "'. You already have " + currentQuantityInCart + " in your cart.");
+        }
+
+        if (existingCartItem.isPresent()) {
+            CartItem cartItem = existingCartItem.get();
+            cartItem.setQuantity(newTotalRequested);
             cartItemRepository.save(cartItem);
+        } else {
+            CartItem newCartItem = new CartItem();
+            newCartItem.setShoppingCart(shoppingCart);
+            newCartItem.setProduct(product);
+            newCartItem.setSize(normalizedSize);
+            newCartItem.setQuantity(quantity);
+            cartItemRepository.save(newCartItem);
+        }
 
-
-        // 4. Save the changes
-        shoppingCartRepository.save(shoppingCart);
-
-        // 5. Return the updated shopping cart DTO
         return shoppingCartMapper.toDTO(shoppingCart);
-
-
-
     }
+
+
 
 
     public ShoppingCartDTO removeProductFromCart(Long userId, Long cartItemId) {

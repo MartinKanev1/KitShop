@@ -1,6 +1,7 @@
 package com.example.KitShop.Repositories;
 
 import com.example.KitShop.Models.CartItem;
+import com.example.KitShop.Models.ProductKits;
 import com.example.KitShop.Models.ShoppingCart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,5 +28,5 @@ public interface CartItemRepository extends JpaRepository< CartItem, Long> {
     void deleteByShoppingCart_ShoppingCartId(Long shoppingCartId);
 
 
-
+    Optional<CartItem> findByShoppingCartAndProductAndSize(ShoppingCart shoppingCart, ProductKits product, String size);
 }

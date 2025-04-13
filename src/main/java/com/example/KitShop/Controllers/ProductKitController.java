@@ -68,6 +68,7 @@ public class ProductKitController {
             productKitService.deleteProduct(id);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
     }

@@ -1,0 +1,112 @@
+/* Register.css */
+
+.register-page {
+    min-height: 100vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .register-content {
+    flex: 1;
+    width: 100%;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .image-box {
+    width: 240px;
+    height: 320px;
+    border: 2px solid black;
+    display: none;
+  }
+  
+  .image-box.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .register-form-container {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    margin: 0 24px;
+  }
+  
+  .register-form-container h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 32px;
+  }
+  
+  .register-form label {
+    display: block;
+    text-align: left;
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+  
+  .register-form input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  
+  .register-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .register-form button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .login-link {
+    margin-top: 16px;
+    font-size: 14px;
+  }
+  
+  .login-link a {
+    color: #2563eb;
+    text-decoration: none;
+  }
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+
+  .image-box {
+    width: 480px;   /* or try 600px for even more impact */
+    height: 640px;  /* or 700px if you want a more vertical feel */
+    border: 2px solid black;
+    display: none;
+  }
+
+  .image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Or use 'contain' if you want the whole image visible */
+    border-radius: 4px;
+  }
+  
+  
+  /* Responsive handling */
+  @media (min-width: 768px) {
+    .image-box.show {
+      display: flex;
+    }
+  }
+  

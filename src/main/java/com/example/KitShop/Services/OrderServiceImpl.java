@@ -1,7 +1,6 @@
 package com.example.KitShop.Services;
 
-import com.example.KitShop.DTOs.OrderItemDTO;
-import com.example.KitShop.DTOs.OrdersDTO;
+import com.example.KitShop.DTOs.*;
 import com.example.KitShop.Mappers.OrderItemMapper;
 import com.example.KitShop.Mappers.OrdersMapper;
 import com.example.KitShop.Models.*;
@@ -30,10 +29,12 @@ public class OrderServiceImpl implements OrderService{
     private final CartItemRepository cartItemRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartServiceImpl shoppingCartServiceImpl;
+    private final ProductKitSizeQuantitiesRepository productKitSizeQuantitiesRepository;
+    private final ProductKitServiceImpl productKitServiceImpl;
 
     private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
 
-    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper,UserRepository userRepository,ProductKitsRepository productKitsRepository,OrderItemRepository orderItemRepository,OrderItemMapper orderItemMapper,CartItemRepository cartItemRepository,ShoppingCartRepository shoppingCartRepository,ShoppingCartServiceImpl shoppingCartServiceImpl) {
+    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper,UserRepository userRepository,ProductKitsRepository productKitsRepository,OrderItemRepository orderItemRepository,OrderItemMapper orderItemMapper,CartItemRepository cartItemRepository,ShoppingCartRepository shoppingCartRepository,ShoppingCartServiceImpl shoppingCartServiceImpl,ProductKitSizeQuantitiesRepository productKitSizeQuantitiesRepository,ProductKitServiceImpl productKitServiceImpl) {
         this.ordersRepository=ordersRepository;
         this.ordersMapper = ordersMapper;
         this.userRepository=userRepository;
@@ -43,10 +44,12 @@ public class OrderServiceImpl implements OrderService{
         this.cartItemRepository=cartItemRepository;
         this.shoppingCartRepository=shoppingCartRepository;
         this.shoppingCartServiceImpl =shoppingCartServiceImpl;
+        this.productKitSizeQuantitiesRepository = productKitSizeQuantitiesRepository;
+        this.productKitServiceImpl=productKitServiceImpl;
     }
 
     
-
+    /*
     public OrdersDTO buyProduct(Long userId, Long productId, int quantity, String shippingAddress) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
@@ -164,7 +167,136 @@ public class OrderServiceImpl implements OrderService{
 
         return ordersMapper.toDTO(order);
     }
+   */
 
+    //raboti sled finalni promeni!!
+    @Transactional
+    public OrdersDTO buyProduct(Long userId, Long productId, String size, int quantity, String shippingAddress) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        ProductKits product = productKitsRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
+
+        // 🧠 Normalize and match the size string
+        String requestedSize = size.trim().toUpperCase();
+
+        ProductKitSizeQuantities matchingSize = product.getSizes().stream()
+                .filter(s -> s.getSize() != null && s.getSize().trim().equalsIgnoreCase(requestedSize))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Size '" + size + "' not found for product ID: " + productId));
+
+        // ❗ Check available stock
+        if (matchingSize.getQuantity() < quantity) {
+            throw new RuntimeException("Not enough stock available for size " + size);
+        }
+
+        System.out.println("Available sizes: " + product.getSizes());
+
+        // 🧾 Create the order
+        Orders order = new Orders();
+        order.setUser(user);
+        order.setStatus("PENDING");
+        order.setAddress(shippingAddress);
+        order.setTotalAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+        order.setCreatedAt(LocalDateTime.now());
+        order.setOrderItems(new ArrayList<>());
+
+        // 📦 Create order item
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrder(order);
+        orderItem.setProduct(product);
+        orderItem.setSize(requestedSize); // <- you might want to save size in OrderItem!
+        orderItem.setQuantity(quantity);
+        orderItem.setPriceAtTimeOfPurchase(product.getPrice().doubleValue());
+
+        order.getOrderItems().add(orderItem);
+
+        // 🧾 Save everything
+        ordersRepository.save(order);
+
+        // 🔄 Update product size quantity
+        matchingSize.setQuantity(matchingSize.getQuantity() - quantity);
+        productKitSizeQuantitiesRepository.save(matchingSize); // <- don't forget to wire this repo!
+
+        return ordersMapper.toDTO(order);
+    }
+
+    @Transactional
+    public OrdersDTO checkout(Long userId, String shippingAddress) {
+        // 🔍 Fetch user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Shopping cart not found for user ID: " + userId));
+
+        List<CartItem> cartItems = cartItemRepository.findByShoppingCart(shoppingCart);
+
+        if (cartItems.isEmpty()) {
+            throw new RuntimeException("Shopping cart is empty");
+        }
+
+        Orders order = new Orders();
+        order.setUser(user);
+        order.setStatus("PENDING");
+        order.setCreatedAt(LocalDateTime.now());
+        order.setAddress(shippingAddress);
+        order.setOrderItems(new ArrayList<>());
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (CartItem cartItem : cartItems) {
+            ProductKits product = cartItem.getProduct();
+            String size = cartItem.getSize(); // 🔥 Assuming this is stored in your CartItem entity
+            int quantity = cartItem.getQuantity();
+
+            // Normalize size
+            String normalizedSize = size.trim().toUpperCase();
+
+            ProductKitSizeQuantities matchingSize = product.getSizes().stream()
+                    .filter(s -> s.getSize() != null && s.getSize().trim().equalsIgnoreCase(normalizedSize))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Size '" + size + "' not found for product ID: " + product.getProductKitId()));
+
+            if (matchingSize.getQuantity() < quantity) {
+                throw new RuntimeException("Not enough stock for size '" + size + "' in product: " + product.getName());
+            }
+
+            // Create OrderItem
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProduct(product);
+            orderItem.setQuantity(quantity);
+            orderItem.setSize(normalizedSize); // ✅ Save size!
+            orderItem.setPriceAtTimeOfPurchase(product.getPrice().doubleValue());
+
+            order.getOrderItems().add(orderItem);
+
+            // Deduct stock from specific size
+            matchingSize.setQuantity(matchingSize.getQuantity() - quantity);
+            productKitSizeQuantitiesRepository.save(matchingSize);
+
+            totalAmount = totalAmount.add(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+        }
+
+        order.setTotalAmount(totalAmount);
+        ordersRepository.save(order);
+
+        // 🧹 Clear shopping cart
+        Long tmpId = shoppingCartServiceImpl.getShoppingCartIdByUserId(userId);
+        shoppingCartServiceImpl.deleteShoppingCart(tmpId);
+
+        return ordersMapper.toDTO(order);
+    }
+
+
+
+
+    @Override
+    public OrdersDTO buyProduct(Long userId, Long productId, int quantity, String size, String shippingAddress) {
+        return null;
+    }
 
     public List<OrderItemDTO> getOrderItemsByOrderId(Long orderId) {
         Orders order = ordersRepository.findById(orderId)
@@ -197,6 +329,107 @@ public class OrderServiceImpl implements OrderService{
 
         return orderItem.getProduct().getProductKitId();
     }
+
+
+//    @Transactional
+//    public List<FullOrderDTO> getAllOrdersWithDetailsByUserId(Long userId) {
+//        List<OrdersDTO> orders = ordersRepository.findByUser_UserId(userId);
+//
+//        return orders.stream().map(order -> {
+//            List<FullOrderItemDTO> itemDTOs = order.orderItems().stream().map(orderItem -> {
+//                // Step 1: Get productId from orderItem
+//                Long productId = getProductIdByOrderItemId(orderItem.orderItemId());
+//
+//                // Step 2: Fetch product details
+//                ProductKitsDTO product = productKitServiceImpl.getProductById(productId).orElseThrow(() ->
+//                        new RuntimeException("Product not found for ID: " + productId));
+//
+//                // Step 3: Build enriched item DTO
+//                return new FullOrderItemDTO(
+//                        product.name(),
+//                        product.imageUrl(),
+//                        product.price(),
+//                        orderItem.size(),
+//                        orderItem.quantity()
+//                );
+//            }).collect(Collectors.toList());
+//
+//            // Step 4: Build enriched order DTO
+//            return new FullOrderDTO(
+//                    order.orderId(),
+//                    order.status(),
+//                    order.address(),
+//                    order.totalAmount(),
+//                    order.createdAt(),
+//                    itemDTOs
+//            );
+//        }).collect(Collectors.toList());
+//    }
+
+    @Transactional
+    public List<FullOrderDTO> getAllOrdersWithDetailsByUserId(Long userId) {
+        List<Orders> orders = ordersRepository.findByUser_UserId(userId);
+
+        return orders.stream().map(ordersMapper::toDTO).map(order -> {
+            List<FullOrderItemDTO> itemDTOs = order.orderItems().stream().map(orderItem -> {
+                Long productId = getProductIdByOrderItemId(orderItem.orderItemId());
+                ProductKitsDTO product = productKitServiceImpl.getProductById(productId)
+                        .orElseThrow(() -> new RuntimeException("Product not found for ID: " + productId));
+                return new FullOrderItemDTO(
+                        product.name(),
+                        product.imageUrl(),
+                        product.price(),
+                        orderItem.size(),
+                        orderItem.quantity()
+                );
+            }).toList();
+
+            return new FullOrderDTO(
+                    order.orderId(),
+                    order.status(),
+                    order.address(),
+                    order.totalAmount(),
+                    order.createdAt(),
+                    itemDTOs
+            );
+        }).toList();
+    }
+
+
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        Orders order = ordersRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found for ID: " + orderId));
+
+        List<OrderItemDTO> orderItems = getOrderItemsByOrderId(orderId);
+
+        for (OrderItemDTO orderItem : orderItems) {
+            Long productId = getProductIdByOrderItemId(orderItem.orderItemId());
+            String size = orderItem.size();
+            int quantity = orderItem.quantity();
+
+            // Find the specific size quantity row
+            ProductKitSizeQuantities sizeQuantity = (ProductKitSizeQuantities) productKitSizeQuantitiesRepository
+                    .findByProductKit_ProductKitIdAndSize(productId, size)
+                    .orElseThrow(() -> new RuntimeException(
+                            "Size quantity not found for productId " + productId + " and size " + size
+                    ));
+
+            // Add the quantity back
+            sizeQuantity.setQuantity(sizeQuantity.getQuantity() + quantity);
+            productKitSizeQuantitiesRepository.save(sizeQuantity);
+
+            // Delete the order item
+            orderItemRepository.deleteById(orderItem.orderItemId());
+        }
+
+        // Delete the order
+        ordersRepository.delete(order);
+
+    }
+
+
+
 
 
 }

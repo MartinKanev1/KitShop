@@ -12,6 +12,7 @@ public interface CartItemMapper {
     @Mapping(target = "cartItemId", source = "dto.cartItemId")
     @Mapping(target = "product.productKitId", source = "dto.productId")
     @Mapping(target = "quantity", source = "dto.quantity")
+    @Mapping(target = "size", source = "dto.size")
 
     CartItem toEntity( CartItemDTO dto);
 

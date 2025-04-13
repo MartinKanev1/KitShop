@@ -23,6 +23,9 @@ public class OrderItem {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductKits product;
 
+    @Column
+    private String size;
+
     @Column(nullable = false)
     private int quantity;
 

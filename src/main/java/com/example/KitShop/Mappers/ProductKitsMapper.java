@@ -15,9 +15,7 @@ public interface ProductKitsMapper {
     @Mapping(target = "price", source = "dto.price")
     @Mapping(target = "playerNameOnKit", source = "dto.playerNameOnKit")
     @Mapping(target = "teamNameOfKit", source = "dto.teamNameOfKit")
-    @Mapping(target = "size", source = "dto.size")
     @Mapping(target = "type", source = "dto.type")
-    @Mapping(target = "quantity", source = "dto.quantity")
     @Mapping(target = "imageUrl", source = "dto.imageUrl")
 
     ProductKits toEntity(ProductKitsDTO dto);
