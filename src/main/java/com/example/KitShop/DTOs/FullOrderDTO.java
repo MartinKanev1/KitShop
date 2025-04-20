@@ -8,6 +8,7 @@ public record FullOrderDTO(
         Long orderId,
         String status,
         String address,
+        Long userTo,
         BigDecimal totalAmount,
         LocalDateTime createdAt,
         List<FullOrderItemDTO> items

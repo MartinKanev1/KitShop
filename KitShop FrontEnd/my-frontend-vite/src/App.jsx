@@ -10,6 +10,7 @@ import ViewProduct from './pages/ViewProduct';
 import ShoppingCart from "./pages/ShoppingCart";
 import Favorites from "./pages/Favourites";
 import MyOrders from "./pages/MyOrders";
+import ALLOrders from "./pages/ViewAllOrders";
 import './App.css'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/my-shopping-cart" element={<ShoppingCart />} />
         <Route path="/my-favourite-products" element={<Favorites />} />
         <Route path="/my-orders" element={<MyOrders />} />
+        <Route path="/all-orders" element={<ALLOrders />} />
 
 
       </Routes>

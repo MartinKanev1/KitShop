@@ -377,6 +377,7 @@ public class OrderServiceImpl implements OrderService{
                         .orElseThrow(() -> new RuntimeException("Product not found for ID: " + productId));
                 return new FullOrderItemDTO(
                         product.name(),
+                        product.productKitId(),
                         product.imageUrl(),
                         product.price(),
                         orderItem.size(),
@@ -388,6 +389,40 @@ public class OrderServiceImpl implements OrderService{
                     order.orderId(),
                     order.status(),
                     order.address(),
+                    order.userId(),
+                    order.totalAmount(),
+                    order.createdAt(),
+                    itemDTOs
+            );
+        }).toList();
+    }
+
+    @Transactional
+    public List<FullOrderDTO> getAllOrdersWithDetails() {
+        List<Orders> orders = ordersRepository.findAll();
+
+        return orders.stream().map(ordersMapper::toDTO).map(order -> {
+            List<FullOrderItemDTO> itemDTOs = order.orderItems().stream().map(orderItem -> {
+                Long productId = getProductIdByOrderItemId(orderItem.orderItemId());
+                ProductKitsDTO product = productKitServiceImpl.getProductById(productId)
+                        .orElseThrow(() -> new RuntimeException("Product not found for ID: " + productId));
+                return new FullOrderItemDTO(
+                        product.name(),
+                        product.productKitId(),
+                        product.imageUrl(),
+                        product.price(),
+                        orderItem.size(),
+                        orderItem.quantity()
+                );
+            }).toList();
+
+            Long userIdTo = ordersRepository.findUserIdByOrderId(order.orderId());
+
+            return new FullOrderDTO(
+                    order.orderId(),
+                    order.status(),
+                    order.address(),
+                    userIdTo,
                     order.totalAmount(),
                     order.createdAt(),
                     itemDTOs
@@ -425,6 +460,17 @@ public class OrderServiceImpl implements OrderService{
 
         // Delete the order
         ordersRepository.delete(order);
+
+    }
+
+    public OrdersDTO approveOrder(Long orderId) {
+        Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new RuntimeException( "order not found"));
+
+        order.setStatus("Approved");
+
+        Orders approvedOrder = ordersRepository.save(order);
+
+        return ordersMapper.toDTO(approvedOrder);
 
     }
 

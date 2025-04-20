@@ -41,8 +41,8 @@ public class OrdersController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrdersDTO>> getAllOffers() {
-        List<OrdersDTO> offers = ordersService.getAllOrders();
+    public ResponseEntity<List<FullOrderDTO>> getAllOrders() {
+        List<FullOrderDTO> offers = ordersService.getAllOrdersWithDetails();
         return ResponseEntity.ok(offers);
     }
 
@@ -93,6 +93,13 @@ public class OrdersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel order");
         }
     }
+
+    @PutMapping("/{orderId}/approve")
+    public ResponseEntity<OrdersDTO> approveOrder(@PathVariable Long orderId) {
+        OrdersDTO approvedOrder = ordersService.approveOrder(orderId);
+        return ResponseEntity.ok(approvedOrder);
+    }
+
 
 
 

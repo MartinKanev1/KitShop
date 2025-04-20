@@ -92,3 +92,40 @@ export const cancelOrder = async (orderId) => {
     throw error;
   }
 };
+
+export const getAllOrders = async () => {
+  const token = localStorage.getItem('jwt');
+
+  try {
+    const response = await axios.get(`${API_URL}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Fetching orders failed:', error);
+    throw error;
+  }
+};
+
+export const ApproveOrders = async (orderId) => {
+  const token = localStorage.getItem('jwt');
+
+  try {
+    const response = await axios.get(`${API_URL}/approve`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Order not found with id:', orderId);
+    throw error;
+  }
+};
+
+
+

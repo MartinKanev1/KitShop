@@ -30,4 +30,6 @@ public interface OrdersRepository extends JpaRepository< Orders, Long> {
     List<Orders> findByUser_UserId(Long userId);
 
 
+    @Query("SELECT o.user.id FROM Orders o WHERE o.orderId = :orderId")
+    Long findUserIdByOrderId( Long orderId);
 }
