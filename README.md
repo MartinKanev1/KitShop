@@ -60,8 +60,13 @@ Containerization: Docker
 Swagger for Api's
 
 
+=================================================
 Images of the app:
+
+
 ![image](https://github.com/user-attachments/assets/9e6014ad-9e3a-406d-a67d-2bba025371c2)
+
+![image](https://github.com/user-attachments/assets/107b27dd-2598-4e78-8c84-df3f90e9d809)
 
 ![image](https://github.com/user-attachments/assets/44e14b31-7650-4b09-a3af-368adca75050)
 
