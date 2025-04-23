@@ -15,6 +15,8 @@ Add/Remove products to and from the shopping cart
 
 Purchase individual items or the entire cart
 
+Favourites page, where an user can view/add/remove products to his favourite products list
+
 Write reviews on products
 
 View reviews on products
