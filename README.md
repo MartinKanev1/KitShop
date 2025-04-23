@@ -17,7 +17,7 @@ Purchase individual items or the entire cart
 
 Write reviews on products
 
-View revies on products
+View reviews on products
 
 View your own orders with option to cancel
 
@@ -43,6 +43,8 @@ Unit testing for backend logic
 🧰 Tech Stack
 Backend: Java, Spring Boot
 
+Frontend: React.js 
+
 Database: PostgreSQL
 
 Security: Spring Security
@@ -53,14 +55,13 @@ Image Hosting: Cloudinary
 
 Testing: JUnit
 
-Frontend: React.js 
-
 Containerization: Docker
 
-Swagger for Api's
+API Documentation: Swagger
 
 
 =================================================
+
 Images of the app:
 
 
