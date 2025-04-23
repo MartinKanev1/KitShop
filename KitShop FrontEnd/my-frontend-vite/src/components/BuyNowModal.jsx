@@ -23,7 +23,7 @@ const BuyNowModal = ({ isOpen, onClose, onConfirm, product, size, quantity }) =>
         <div className="modal-content">
           <h2>🛍 Confirm Purchase</h2>
   
-          {/* User Info Section */}
+          
           <div className="modal-section">
             <h4>👤 Your Info</h4>
             {loading ? (
@@ -39,7 +39,7 @@ const BuyNowModal = ({ isOpen, onClose, onConfirm, product, size, quantity }) =>
             )}
           </div>
   
-          {/* Shipping Address Input */}
+          
           <div className="modal-section">
             <label>📦 Shipping Address:</label>
             <textarea
@@ -50,7 +50,7 @@ const BuyNowModal = ({ isOpen, onClose, onConfirm, product, size, quantity }) =>
             />
           </div>
   
-          {/* Order Info */}
+          
           <div className="modal-section">
             <h4>🛒 Order Summary</h4>
             <p><strong>Product:</strong> {product.name}</p>
@@ -58,7 +58,7 @@ const BuyNowModal = ({ isOpen, onClose, onConfirm, product, size, quantity }) =>
              <p><strong>Payment Method:</strong> Cash on Delivery</p>
           </div>
   
-          {/* Buttons */}
+          
           <div className="modal-buttons">
             <button onClick={handleConfirm}>✅ Confirm Purchase</button>
             <button onClick={onClose}>❌ Cancel</button>

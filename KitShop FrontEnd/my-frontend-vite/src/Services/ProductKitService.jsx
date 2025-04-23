@@ -102,7 +102,7 @@ export const addReview = async (productId, reviewText) => {
     );
     return response.data;
   } catch (error) {
-    console.error('❌ Error adding review:', error);
+    console.error(' Error adding review:', error);
     throw error;
   }
 };
@@ -118,7 +118,7 @@ export const getAllReviewsForProduct = async (productId) => {
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Error fetching reviews:", error);
+    console.error(" Error fetching reviews:", error);
     throw error;
   }
 };

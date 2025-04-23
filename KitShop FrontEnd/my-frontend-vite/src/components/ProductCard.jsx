@@ -5,12 +5,18 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { AddToFavourites, RemoveFromFavourites, GetUserFavourites } from '../Services/FavouriteService';
+import useUserInfo from '../hooks/useUserInfo'; 
+
+
+
 
 const ProductCard = ({ product }) => {
   if (!product || !product.imageUrl) return null;
   
 
   const id = product.productKitId;
+
+  const { user } = useUserInfo(); 
 
   const isOutOfStock = product.sizes?.every(size => size.quantity === 0);
 
@@ -55,11 +61,13 @@ const handleFavoriteToggle = async (e) => {
   return (
     
     <div className="product-card">
+      {user?.role === 'Admin' && (
        <Link to={`/edit-product/${product.productKitId}`} >
       <button className="edit-button">
         <EditIcon fontSize="small" />
       </button>
       </Link>
+      )}
 
       <Heart
           onClick={handleFavoriteToggle}

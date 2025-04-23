@@ -15,13 +15,13 @@
     font-size: 1.2rem;
     font-weight: 500;
     color: #555;
-  }
+  } 
   
 
   .product-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* OR try contain */
+    object-fit: cover; 
     border-radius: 4px;
   }
   
@@ -39,7 +39,7 @@
     align-items: center;
   }
   
-  /* Size Selector */
+  
   .size-section label,
   .quantity-section label {
     font-weight: 600;
@@ -69,7 +69,7 @@
     color: white;
   }
   
-  /* Quantity Selector */
+ 
   .quantity-box {
     display: flex;
     align-items: center;
@@ -106,7 +106,7 @@
   .add-to-cart-button {
     margin-top: 1.5rem;
     padding: 0.75rem 2rem;
-    background-color: lightblue; /* Deep blue */
+    background-color: lightblue; 
     color: #fff;
     border: none;
     border-radius: 12px;
@@ -122,7 +122,7 @@
   }
   
   .add-to-cart-button:hover {
-    background-color: lightblue; /* Slightly lighter blue */
+    background-color: lightblue; 
     transform: translateY(-2px);
   }
   
@@ -140,7 +140,7 @@
 .buy-now-button,
 .review-button {
   padding: 0.75rem 1.5rem;
-  background-color: lightblue; /* greenish */
+  background-color: lightblue; 
   color: white;
   border: none;
   border-radius: 12px;
@@ -165,9 +165,9 @@
   padding: 1.5rem;
   border-radius: 12px;
   width: 100%;
-  max-width: 480px; /* 👈 match product image width */
+  max-width: 480px; 
   margin-left: auto;
-  margin-right: auto; /* 👈 center it */
+  margin-right: auto; 
 }
 
 
@@ -211,10 +211,42 @@
   margin-bottom: 10px;
 }
 
+@media (max-width: 768px) {
+  .view-product-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .product-image,
+  .product-details {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
 
 @media (max-width: 600px) {
+  .product-image {
+    height: auto;
+  }
+
+  .product-details {
+    gap: 0.75rem;
+  }
+
+  .selection-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
   .review-form {
     max-width: 90%;
+    padding: 1rem;
   }
 }
 

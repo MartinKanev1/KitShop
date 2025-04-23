@@ -49,127 +49,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     
-    /*
-    public OrdersDTO buyProduct(Long userId, Long productId, int quantity, String shippingAddress) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        ProductKits product = productKitsRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
-
-        if (product.getQuantity() < quantity) {
-            throw new RuntimeException("Not enough stock available");
-        }
-
-        // Create Order
-        Orders order = new Orders();
-        order.setUser(user);
-        order.setStatus("PENDING");
-        order.setAddress(shippingAddress);
-        order.setTotalAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
-        order.setCreatedAt(LocalDateTime.now());
-
-        // Ensure orderItems list is initialized
-        if (order.getOrderItems() == null) {
-            order.setOrderItems(new ArrayList<>());
-        }
-
-        // Create OrderItem
-        OrderItem orderItem = new OrderItem();
-        orderItem.setOrder(order);
-        orderItem.setProduct(product);
-        orderItem.setQuantity(quantity);
-        orderItem.setPriceAtTimeOfPurchase(product.getPrice().doubleValue()); // Store price history
-
-        order.getOrderItems().add(orderItem); // ✅ Correctly associate OrderItem with Order
-
-        // Save Order (CascadeType.ALL will persist order items)
-        order = ordersRepository.save(order);
-
-        // Save OrderItem separately if needed (not necessary with CascadeType.ALL)
-        orderItemRepository.save(orderItem);
-
-        // Update product stock
-        product.setQuantity(product.getQuantity() - quantity);
-        productKitsRepository.save(product);
-
-        return ordersMapper.toDTO(order);
-    }
-
-    @Transactional
-    public OrdersDTO checkout(Long userId, String shippingAddress) {
-        // Fetch user
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-
-
-
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Shopping cart not found for user ID: " + userId));
-
-        // Fetch shopping cart items
-        List<CartItem> cartItems = cartItemRepository.findByShoppingCart(shoppingCart);
-
-        if (cartItems.isEmpty()) {
-            throw new RuntimeException("Shopping cart is empty");
-        }
-
-        // Create Order
-        Orders order = new Orders();
-        order.setUser(user);
-        order.setStatus("PENDING");
-        order.setCreatedAt(LocalDateTime.now());
-        order.setAddress(shippingAddress);
-        order.setOrderItems(new ArrayList<>()); // Initialize order items list
-
-        BigDecimal totalAmount = BigDecimal.ZERO; // Track total order cost
-
-        // Process each CartItem
-        for (CartItem cartItem : cartItems) {
-            ProductKits product = cartItem.getProduct();
-
-            // Check if enough stock is available
-            if (product.getQuantity() < cartItem.getQuantity()) {
-                throw new RuntimeException("Not enough stock available for product: " + product.getName());
-            }
-
-            // Create OrderItem
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setProduct(product);
-            orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setPriceAtTimeOfPurchase(product.getPrice().doubleValue());
-
-            order.getOrderItems().add(orderItem);
-
-            // Deduct stock
-            product.setQuantity(product.getQuantity() - cartItem.getQuantity());
-            productKitsRepository.save(product);
-
-            // Calculate total order amount
-            totalAmount = totalAmount.add(product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
-        }
-
-        // Set total amount for the order
-        order.setTotalAmount(totalAmount);
-
-        // Save order (CascadeType.ALL will persist order items)
-        order = ordersRepository.save(order);
-
-        // Clear shopping cart
-
-
-        Long tmpId = shoppingCartServiceImpl.getShoppingCartIdByUserId(userId);
-
-        shoppingCartServiceImpl.deleteShoppingCart(tmpId);
-
-        //shoppingCartServiceImpl.deleteShoppingCart(shoppingCart.getShoppingCartId());
-
-        return ordersMapper.toDTO(order);
-    }
-   */
-
-    //raboti sled finalni promeni!!
     @Transactional
     public OrdersDTO buyProduct(Long userId, Long productId, String size, int quantity, String shippingAddress) {
         User user = userRepository.findById(userId)
@@ -178,7 +58,7 @@ public class OrderServiceImpl implements OrderService{
         ProductKits product = productKitsRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
 
-        // 🧠 Normalize and match the size string
+
         String requestedSize = size.trim().toUpperCase();
 
         ProductKitSizeQuantities matchingSize = product.getSizes().stream()
@@ -186,14 +66,14 @@ public class OrderServiceImpl implements OrderService{
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Size '" + size + "' not found for product ID: " + productId));
 
-        // ❗ Check available stock
+
         if (matchingSize.getQuantity() < quantity) {
             throw new RuntimeException("Not enough stock available for size " + size);
         }
 
         System.out.println("Available sizes: " + product.getSizes());
 
-        // 🧾 Create the order
+
         Orders order = new Orders();
         order.setUser(user);
         order.setStatus("PENDING");
@@ -202,29 +82,29 @@ public class OrderServiceImpl implements OrderService{
         order.setCreatedAt(LocalDateTime.now());
         order.setOrderItems(new ArrayList<>());
 
-        // 📦 Create order item
+
         OrderItem orderItem = new OrderItem();
         orderItem.setOrder(order);
         orderItem.setProduct(product);
-        orderItem.setSize(requestedSize); // <- you might want to save size in OrderItem!
+        orderItem.setSize(requestedSize);
         orderItem.setQuantity(quantity);
         orderItem.setPriceAtTimeOfPurchase(product.getPrice().doubleValue());
 
         order.getOrderItems().add(orderItem);
 
-        // 🧾 Save everything
+
         ordersRepository.save(order);
 
-        // 🔄 Update product size quantity
+
         matchingSize.setQuantity(matchingSize.getQuantity() - quantity);
-        productKitSizeQuantitiesRepository.save(matchingSize); // <- don't forget to wire this repo!
+        productKitSizeQuantitiesRepository.save(matchingSize);
 
         return ordersMapper.toDTO(order);
     }
 
     @Transactional
     public OrdersDTO checkout(Long userId, String shippingAddress) {
-        // 🔍 Fetch user
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
@@ -248,7 +128,7 @@ public class OrderServiceImpl implements OrderService{
 
         for (CartItem cartItem : cartItems) {
             ProductKits product = cartItem.getProduct();
-            String size = cartItem.getSize(); // 🔥 Assuming this is stored in your CartItem entity
+            String size = cartItem.getSize();
             int quantity = cartItem.getQuantity();
 
             // Normalize size
@@ -263,17 +143,17 @@ public class OrderServiceImpl implements OrderService{
                 throw new RuntimeException("Not enough stock for size '" + size + "' in product: " + product.getName());
             }
 
-            // Create OrderItem
+
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(product);
             orderItem.setQuantity(quantity);
-            orderItem.setSize(normalizedSize); // ✅ Save size!
+            orderItem.setSize(normalizedSize);
             orderItem.setPriceAtTimeOfPurchase(product.getPrice().doubleValue());
 
             order.getOrderItems().add(orderItem);
 
-            // Deduct stock from specific size
+
             matchingSize.setQuantity(matchingSize.getQuantity() - quantity);
             productKitSizeQuantitiesRepository.save(matchingSize);
 
@@ -283,7 +163,7 @@ public class OrderServiceImpl implements OrderService{
         order.setTotalAmount(totalAmount);
         ordersRepository.save(order);
 
-        // 🧹 Clear shopping cart
+
         Long tmpId = shoppingCartServiceImpl.getShoppingCartIdByUserId(userId);
         shoppingCartServiceImpl.deleteShoppingCart(tmpId);
 
@@ -292,11 +172,6 @@ public class OrderServiceImpl implements OrderService{
 
 
 
-
-    @Override
-    public OrdersDTO buyProduct(Long userId, Long productId, int quantity, String size, String shippingAddress) {
-        return null;
-    }
 
     public List<OrderItemDTO> getOrderItemsByOrderId(Long orderId) {
         Orders order = ordersRepository.findById(orderId)
@@ -331,40 +206,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
 
-//    @Transactional
-//    public List<FullOrderDTO> getAllOrdersWithDetailsByUserId(Long userId) {
-//        List<OrdersDTO> orders = ordersRepository.findByUser_UserId(userId);
-//
-//        return orders.stream().map(order -> {
-//            List<FullOrderItemDTO> itemDTOs = order.orderItems().stream().map(orderItem -> {
-//                // Step 1: Get productId from orderItem
-//                Long productId = getProductIdByOrderItemId(orderItem.orderItemId());
-//
-//                // Step 2: Fetch product details
-//                ProductKitsDTO product = productKitServiceImpl.getProductById(productId).orElseThrow(() ->
-//                        new RuntimeException("Product not found for ID: " + productId));
-//
-//                // Step 3: Build enriched item DTO
-//                return new FullOrderItemDTO(
-//                        product.name(),
-//                        product.imageUrl(),
-//                        product.price(),
-//                        orderItem.size(),
-//                        orderItem.quantity()
-//                );
-//            }).collect(Collectors.toList());
-//
-//            // Step 4: Build enriched order DTO
-//            return new FullOrderDTO(
-//                    order.orderId(),
-//                    order.status(),
-//                    order.address(),
-//                    order.totalAmount(),
-//                    order.createdAt(),
-//                    itemDTOs
-//            );
-//        }).collect(Collectors.toList());
-//    }
+
 
     @Transactional
     public List<FullOrderDTO> getAllOrdersWithDetailsByUserId(Long userId) {
@@ -450,15 +292,15 @@ public class OrderServiceImpl implements OrderService{
                             "Size quantity not found for productId " + productId + " and size " + size
                     ));
 
-            // Add the quantity back
+
             sizeQuantity.setQuantity(sizeQuantity.getQuantity() + quantity);
             productKitSizeQuantitiesRepository.save(sizeQuantity);
 
-            // Delete the order item
+
             orderItemRepository.deleteById(orderItem.orderItemId());
         }
 
-        // Delete the order
+
         ordersRepository.delete(order);
 
     }

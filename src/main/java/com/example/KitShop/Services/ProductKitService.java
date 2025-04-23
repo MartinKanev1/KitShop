@@ -2,6 +2,7 @@ package com.example.KitShop.Services;
 
 
 import com.example.KitShop.DTOs.ProductKitsDTO;
+import com.example.KitShop.DTOs.ReviewsDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,4 +22,10 @@ public interface ProductKitService {
     ProductKitsDTO updateProduct(Long productId,ProductKitsDTO productKitsDTO, MultipartFile file) throws IOException;
 
     void deleteProduct(Long productId);
+
+    List<ProductKitsDTO> searchProductKits(String keyword);
+
+    List<ReviewsDTO> getAllReviewsForProduct(Long productId);
+
+    ReviewsDTO addReview(Long productId, ReviewsDTO reviewsDTO);
 }

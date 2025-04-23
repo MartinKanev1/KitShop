@@ -37,40 +37,7 @@ public class ShoppingCartServiceImpl implements  ShoppingCartService{
 
 
 
-//    public ShoppingCartDTO addProductToCart(Long userId, Long productId, String size, int quantity) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-//
-//        ProductKits product = productKitsRepository.findById(productId)
-//                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
-//
-//        ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
-//                .orElseGet(() -> {
-//                    ShoppingCart newCart = new ShoppingCart();
-//                    newCart.setUser(user);
-//                    return shoppingCartRepository.save(newCart);
-//                });
-//
-//        // Check if the cart item already exists
-//        Optional<CartItem> existingCartItem = cartItemRepository
-//                .findByShoppingCartAndProductAndSize(shoppingCart, product, size);
-//
-//        if (existingCartItem.isPresent()) {
-//            CartItem cartItem = existingCartItem.get();
-//            cartItem.setQuantity(cartItem.getQuantity() + quantity); // Update quantity
-//            cartItemRepository.save(cartItem);
-//        } else {
-//            // Add a new cart item
-//            CartItem newCartItem = new CartItem();
-//            newCartItem.setShoppingCart(shoppingCart);
-//            newCartItem.setProduct(product);
-//            newCartItem.setSize(size);
-//            newCartItem.setQuantity(quantity);
-//            cartItemRepository.save(newCartItem);
-//        }
-//
-//        return shoppingCartMapper.toDTO(shoppingCart);
-//    }
+
 
 
     public ShoppingCartDTO addProductToCart(Long userId, Long productId, String size, int quantity) {
@@ -82,7 +49,7 @@ public class ShoppingCartServiceImpl implements  ShoppingCartService{
 
         String normalizedSize = size.trim().toUpperCase();
 
-        // 🔍 Find the specific size entry for the product
+
         ProductKitSizeQuantities sizeEntry = product.getSizes().stream()
                 .filter(s -> s.getSize() != null && s.getSize().trim().equalsIgnoreCase(normalizedSize))
                 .findFirst()
@@ -90,7 +57,7 @@ public class ShoppingCartServiceImpl implements  ShoppingCartService{
 
         int availableStock = sizeEntry.getQuantity();
 
-        // Get or create the user's shopping cart
+
         ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
                 .orElseGet(() -> {
                     ShoppingCart newCart = new ShoppingCart();
@@ -98,7 +65,7 @@ public class ShoppingCartServiceImpl implements  ShoppingCartService{
                     return shoppingCartRepository.save(newCart);
                 });
 
-        // Check if the item is already in the cart
+
         Optional<CartItem> existingCartItem = cartItemRepository
                 .findByShoppingCartAndProductAndSize(shoppingCart, product, normalizedSize);
 
@@ -129,30 +96,30 @@ public class ShoppingCartServiceImpl implements  ShoppingCartService{
 
 
     public ShoppingCartDTO removeProductFromCart(Long userId, Long cartItemId) {
-        // Find user
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        // Find shopping cart
+
         ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Shopping cart not found for user ID: " + userId));
 
-        // Find the cart item
+
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new RuntimeException("Cart item not found with ID: " + cartItemId));
 
-        // Ensure the cart item belongs to the user's shopping cart
+
         if (!cartItem.getShoppingCart().equals(shoppingCart)) {
             throw new RuntimeException("Cart item does not belong to the user's shopping cart");
         }
 
-        // Remove the cart item
+
         cartItemRepository.delete(cartItem);
 
-        // Save the updated shopping cart
+
         shoppingCartRepository.save(shoppingCart);
 
-        // Return updated shopping cart DTO
+
         return shoppingCartMapper.toDTO(shoppingCart);
     }
 
@@ -180,21 +147,7 @@ public class ShoppingCartServiceImpl implements  ShoppingCartService{
         return cartItem.getProduct().getProductKitId();
     }
 
-//    @Transactional
-//    public void deleteShoppingCart (Long shoppingCartId) {
-//        ShoppingCart cart = shoppingCartRepository.findById(shoppingCartId)
-//                .orElseThrow(() -> new IllegalArgumentException("Shopping Cart with ID " + shoppingCartId + " not found"));
-//
-//        if (!shoppingCartRepository.existsById(shoppingCartId)) {
-//            throw new RuntimeException("Shopping Cart with ID " + shoppingCartId + " does not exist.");
-//        }
-//
-//        cartItemRepository.deleteByShoppingCart_ShoppingCartId(shoppingCartId);
-//
-//        shoppingCartRepository.deleteById(shoppingCartId);
-//
-//
-//    }
+
 
     @Transactional
     public void deleteShoppingCart(Long shoppingCartId) {
@@ -203,22 +156,22 @@ public class ShoppingCartServiceImpl implements  ShoppingCartService{
         if (shoppingCartOpt.isPresent()) {
             ShoppingCart shoppingCart = shoppingCartOpt.get();
 
-            // Step 1: Detach ShoppingCart from User
+
             User user = shoppingCart.getUser();
             if (user != null) {
-                user.setShoppingCartItems(null); // Remove reference to ShoppingCart
-                userRepository.save(user); // Save user to persist the change
-                //log.info("Detached ShoppingCart from User.");
+                user.setShoppingCartItems(null);
+                userRepository.save(user);
+
             }
 
-            // Step 2: Delete all cart items first
+
             cartItemRepository.deleteByShoppingCart_ShoppingCartId(shoppingCartId);
 
-            // Step 3: Delete the ShoppingCart
+
             shoppingCartRepository.deleteById(shoppingCartId);
-            //log.info("ShoppingCart deleted successfully.");
+
         } else {
-            //log.warn("ShoppingCart with ID " + shoppingCartId + " does not exist.");
+
         }
     }
 

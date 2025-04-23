@@ -14,7 +14,7 @@ const ShoppingCart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
   
-    const userId = localStorage.getItem('userId'); // adjust this if you store user info differently
+    const userId = localStorage.getItem('userId'); 
     
 
     const [showCheckout, setShowCheckout] = useState(false);
@@ -64,14 +64,14 @@ const ShoppingCart = () => {
           console.log('Order placed successfully:', orderData);
           setCartItems([]);
           setShowCheckout(false);
-          alert('🎉 Order placed successfully!');
+          alert(' Order placed successfully!');
         } catch (error) {
           const message =
             error?.response?.data?.message ||
             error?.response?.data ||
             'Something went wrong with checkout.';
       
-          alert(`❌ Checkout failed: ${message}`);
+          alert(` Checkout failed: ${message}`);
         }
       };
       
@@ -108,36 +108,14 @@ const ShoppingCart = () => {
               
 
 {cartItems.map((item) => (
-//   <div key={item.cartItemId} className="cart-item">
-//     <Link to={`/view-product/${item.productId}`} className="cart-item-link">
-//       <div className="item-info">
-//         <img src={item.imageUrl} alt={item.name} className="item-image" />
-//         <div className="item-details">
-//           <h3 className="item-name">{item.name}</h3>
-//           <p className="item-meta">Size: {item.size}</p>
-//           <p className="item-meta">Qty: {item.quantity}</p>
-//         </div>
-//       </div>
-//     </Link>
-//     <div className="item-actions">
-//       <p className="item-price">
-//         ${Number(item.price * item.quantity).toFixed(2)}
-//       </p>
-//       <button
-//         onClick={() => handleDelete(item.cartItemId)}
-//         className="remove-button"
-//       >
-//         Remove 
-//       </button>
-//     </div>
-//   </div>
+
 <div key={item.cartItemId} className="cart-item">
   <Link to={`/view-product/${item.productId}`} className="cart-item-link">
     <img src={item.imageUrl} alt={item.name} className="item-image" />
     <div className="item-details">
       <h3 className="item-name">{item.name}</h3>
       <p className="item-meta">Size: {item.size}  ||   Quantity: {item.quantity}</p>
-      {/* <p className="item-meta">Qty: {item.quantity}</p> */}
+      
     </div>
   </Link>
 
@@ -145,7 +123,7 @@ const ShoppingCart = () => {
     <p className="item-price">${Number(item.price * item.quantity).toFixed(2)}</p>
     <button
       onClick={(e) => {
-        e.stopPropagation(); // prevents link click
+        e.stopPropagation(); 
         handleDelete(item.cartItemId);
       }}
       className="remove-button"

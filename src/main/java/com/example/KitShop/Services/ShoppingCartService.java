@@ -13,7 +13,11 @@ public interface ShoppingCartService {
 
     ShoppingCartDTO removeProductFromCart(Long userId, Long cartItemId);
 
+    void deleteShoppingCart(Long shoppingCartId);
+
     List<CartItemDTO> getCartItems(Long userId);
 
     Long getProductIdByCartItemId(Long cartItemId);
+
+    Long getShoppingCartIdByUserId(Long userId);
 }

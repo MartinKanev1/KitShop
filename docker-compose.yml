@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  backend:
+    image: kitshop-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/kitshop
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: adminmarti
+    networks:
+      - kitshop-net
+
+  frontend:
+    image: kitshop-frontend
+    build:
+      context: ./KitShop FrontEnd/my-frontend-vite
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - kitshop-net
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: kitshop
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: adminmarti
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - kitshop-net
+
+networks:
+  kitshop-net:
+
+volumes:
+  postgres-data:

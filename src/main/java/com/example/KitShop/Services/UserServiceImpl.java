@@ -38,24 +38,7 @@ public class UserServiceImpl implements  UserService{
     }
 
 
-//    @Transactional
-//    public UserDTO createUser(UserDTO userDTO) {
-//        User user = new User();
-//        user.setFirstName(userDTO.firstName());
-//        user.setLastName(userDTO.lastName());
-//        user.setEmail(userDTO.email());
-//        user.setPassword(userDTO.password());
-//        user.setPhoneNumber(userDTO.phoneNumber());
-////        user.setAddress(userDTO.address());
-//        user.setRole(Roles.Users);
-//
-//        User createdUser = userRepository.save(user);
-//
-//        UserDTO createdUserDTO = userMapper.toDTO(createdUser);
-//
-//        return createdUserDTO;
-//
-//    }
+
 
     @Transactional
     public UserDTO updateUser(Long userId, UserDTO updatedUserDTO) {
@@ -68,7 +51,7 @@ public class UserServiceImpl implements  UserService{
         existingUser.setEmail(updatedUserDTO.email());
         existingUser.setPassword(updatedUserDTO.password());
         existingUser.setPhoneNumber(updatedUserDTO.phoneNumber());
-//        existingUser.setAddress(updatedUserDTO.address());
+
 
         User savedUser = userRepository.save(existingUser);
         return userMapper.toDTO(savedUser);

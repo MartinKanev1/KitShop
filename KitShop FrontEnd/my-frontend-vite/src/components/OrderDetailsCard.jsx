@@ -1,30 +1,4 @@
-// import React from "react";
 
-// const OrderDetailsCard = ({ item }) => {
-  
-
-//   return (
-//     <div
-//       style={{
-//         display: "flex",
-//         alignItems: "center",
-//         marginBottom: "1rem",
-//       }}
-//     >
-      
-//       <div>
-      
-        
-//         <p><strong>ProductID: {item.id}</strong></p>
-//         <p>Size: {item.size}</p>
-//         <p>Quantity: {item.quantity}</p>
-//         <p>Price: ${item.price.toFixed(2)}</p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default OrderDetailsCard;
 import React from "react";
 
 const OrderDetailsCard = ({ item }) => {
@@ -41,7 +15,7 @@ const OrderDetailsCard = ({ item }) => {
         marginBottom: "1rem",
       }}
     >
-      {/* Optional image thumbnail */}
+      
       {item.imageUrl && (
         <img
           src={item.imageUrl}
@@ -55,7 +29,7 @@ const OrderDetailsCard = ({ item }) => {
         />
       )}
 
-      {/* Product info */}
+     
       <div>
         <p><strong>{item.name || `ProductID: ${item.id}`}</strong></p>
         <p>Size: {item.size}</p>

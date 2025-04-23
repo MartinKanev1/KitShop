@@ -37,11 +37,6 @@ public class UserController {
     }
 
 
-//    @PostMapping
-//    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-//        UserDTO createdUser = userServiceImpl.createUser(userDTO);
-//        return ResponseEntity.status(201).body(createdUser);
-//    }
 
     @PutMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO userDTO) {

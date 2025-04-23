@@ -3,7 +3,7 @@ import OrderItem from '../components/OrderItem';
 
 
 const MyOrdersCard = ({ order, onCancel }) => {
-    const borderColor = "#add8e6"; // light blue
+    const borderColor = "#add8e6"; 
 
     const handleCancelClick = () => {
       const confirmed = window.confirm("Are you sure you want to cancel this order?");
@@ -24,7 +24,7 @@ const MyOrdersCard = ({ order, onCancel }) => {
           backgroundColor: "white",
         }}
       >
-        {/* Ordered Items List */}
+        
         <div
           style={{
             flex: 3,
@@ -40,7 +40,7 @@ const MyOrdersCard = ({ order, onCancel }) => {
           ))}
         </div>
   
-        {/* Side Panel */}
+       
         <div
           style={{
             flex: 1,

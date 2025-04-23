@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProductKitSizeQuantitiesRepository extends JpaRepository<ProductKitSizeQuantities, Long> {
-    //Optional<Object> findByProductKitIdAndSize(Long productId, String size);
 
     Optional<ProductKitSizeQuantities> findByProductKit_ProductKitIdAndSize(Long productKitId, String size);
 

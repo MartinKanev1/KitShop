@@ -10,22 +10,11 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 5rem; /* 🪄 this keeps it below your header */
+    padding-top: 5rem; 
     z-index: 999;
   }
   
-/*   
-  .modal-content {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 16px;
-    width: 450px;
-    max-width: 90%;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  } */
+
 
   .modal-content {
     background-color: white;
@@ -38,10 +27,10 @@
     flex-direction: column;
     gap: 1.5rem;
     
-    /* New styles for scroll handling */
-    max-height: 80vh; /* This ensures the modal doesn't grow too tall */
-    overflow-y: auto; /* Allows scrolling when content overflows */
-    box-sizing: border-box; /* Prevents padding from causing overflow */
+    
+    max-height: 80vh; 
+    overflow-y: auto; 
+    box-sizing: border-box; 
   }
   
   .modal-content h2 {

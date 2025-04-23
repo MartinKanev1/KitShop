@@ -8,8 +8,8 @@ import { TextField, Typography, Paper, Stack, Button, CircularProgress} from '@m
 
 const UserInfo = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);        // will hold the actual user info
-    const [tempUser, setTempUser] = useState(null); // used for editing
+    const [user, setUser] = useState(null);        
+    const [tempUser, setTempUser] = useState(null); 
     const [isReadOnly, setIsReadOnly] = useState(true);
     const [loading, setLoading] = useState(true);
   
@@ -20,7 +20,7 @@ const UserInfo = () => {
         try {
           const userData = await getUserInfo();
           setUser(userData);
-          setTempUser(userData); // initialize tempUser with user data
+          setTempUser(userData); 
           setLoading(false);
         } catch (error) {
           console.error("Failed to load user data", error);
@@ -38,7 +38,7 @@ const UserInfo = () => {
     const handleEdit = () => setIsReadOnly(false);
   
     const handleCancel = () => {
-      setTempUser(user);     // Reset to original user data
+      setTempUser(user);     
       setIsReadOnly(true);
     };
   
@@ -46,13 +46,13 @@ const UserInfo = () => {
         try {
           const userId = localStorage.getItem("userId");
           const updatedUser = await updateUserInfo(userId, tempUser);
-          setUser(updatedUser);        // update local state with new data
-          setTempUser(updatedUser);    // reset temp user to saved state
+          setUser(updatedUser);        
+          setTempUser(updatedUser);    
           setIsReadOnly(true);
-          // You could also show a toast/snackbar here to confirm success
+          
         } catch (error) {
           console.error("Error saving changes:", error);
-          // Optionally show an error message to the user
+          
         }
       };
 
@@ -66,14 +66,14 @@ const UserInfo = () => {
         try {
           await deleteUser(userId);
     
-          // Optionally clear localStorage and redirect
+          
           localStorage.removeItem("jwt");
           localStorage.removeItem("userId");
     
-          navigate("/register"); // or to login/landing page
+          navigate("/register"); 
         } catch (error) {
           console.error("Error deleting user:", error);
-          // Show an error message if needed
+          
         }
       };
   
@@ -88,7 +88,7 @@ const UserInfo = () => {
 {loading ? (
           <CircularProgress />
         ) : (
-          <Paper elevation={3} sx={{ padding: 4, width: 400, bgcolor: 'lightblue', borderRadius: 2 }}>
+          <Paper elevation={3} sx={{ padding: 4, width: 400, bgcolor: '#cfd1d0', borderRadius: 2 }}>
             <Typography variant="h5" align="center" gutterBottom>
               User Details
             </Typography>

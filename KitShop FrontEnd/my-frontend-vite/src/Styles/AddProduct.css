@@ -37,6 +37,8 @@
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+    
+    
   }
   
   .file-input {
@@ -91,5 +93,54 @@
       flex-direction: column;
     }
   }
+
+  @media (max-width: 900px) {
+    .add-product-container {
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      gap: 20px;
+      width: 100%;
+      margin: 40px auto;
+    }
+  
+    .image-upload-section,
+    .product-details-section {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .image-box-product {
+      height: 200px;
+      font-size: 14px;
+    }
+  
+    .product-details-section label {
+      font-size: 14px;
+    }
+  
+    .product-details-section input,
+    .product-details-section textarea,
+    .product-details-section select {
+      font-size: 14px;
+      padding: 8px;
+    }
+  
+    .submit-button {
+      padding: 10px;
+      font-size: 14px;
+    }
+  
+    .size-entry {
+      flex-direction: column;
+    }
+  
+    .size-entry input {
+      width: 100%;
+    }
+  }
+  
   
   

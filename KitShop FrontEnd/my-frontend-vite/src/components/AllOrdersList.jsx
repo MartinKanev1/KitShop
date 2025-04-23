@@ -1,73 +1,14 @@
-// import React, { useEffect, useState } from "react";
-// import OrdersCard from "../components/OrdersCard";
-// import { getAllOrders, ApproveOrders } from "../Services/OrderService"; // ✅ correct
-
-
-// const AllOrdersList = () => {
-//     const [orders, setOrders] = useState([]);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState("");
-  
-    
-  
-//     useEffect(() => {
-//       const fetchOrders = async () => {
-//         try {
-          
-//             const data = await getAllOrders();
-//             setOrders(data);
-//           } catch (err) {
-//             setError("Failed to load orders");
-//             console.error(err);
-//           } finally {
-//             setLoading(false);
-//           }
-//         };
-    
-//         fetchOrders();
-//       }, []);
-
-//       const handleApproveOrder = async (orderId) => {
-//         try {
-//           await ApproveOrders(orderId);
-//           alert('Order canceled!');
-          
-//         } catch (err) {
-//           console.error(err);
-//           alert('Failed to cancel order');
-//         }
-//       };
-
-    
-  
-//     if (loading) return <p style={{ padding: "2rem" }}>Loading orders...</p>;
-//     if (error) return <p style={{ padding: "2rem", color: "red" }}>{error}</p>;
-  
-//     return (
-//       <div style={{ padding: "2rem" }}>
-//         <h2>Orders</h2>
-//         {orders.length === 0 ? (
-//           <p>No orders found.</p>
-//         ) : (
-//           orders.map((order) => (
-//             <OrdersCard key={order.orderId} order={order} onApprove={handleApproveOrder}  />
-//           ))
-//         )}
-//       </div>
-//     );
-//   };
-  
-//   export default AllOrdersList;
 
 import React, { useEffect, useState } from "react";
 import OrdersCard from "../components/OrdersCard";
 import { getAllOrders, ApproveOrders } from "../Services/OrderService";
+import { CircularProgress, Alert } from "@mui/material";
 
 const AllOrdersList = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [statusFilter, setStatusFilter] = useState("PENDING"); // 👈 default to PENDING
+  const [statusFilter, setStatusFilter] = useState("PENDING");
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -88,7 +29,6 @@ const AllOrdersList = () => {
   const handleApproveOrder = async (orderId) => {
     try {
       await ApproveOrders(orderId);
-      // Update status in UI without refetching
       setOrders((prev) =>
         prev.map((order) =>
           order.orderId === orderId ? { ...order, status: "Approved" } : order
@@ -104,21 +44,39 @@ const AllOrdersList = () => {
     (order) => order.status === statusFilter
   );
 
-  if (loading) return <p style={{ padding: "2rem" }}>Loading orders...</p>;
-  if (error) return <p style={{ padding: "2rem", color: "red" }}>{error}</p>;
+  if (loading)
+    return (
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "4rem" }}>
+        <CircularProgress />
+      </div>
+    );
+
+  if (error)
+    return (
+      <div style={{ padding: "2rem" }}>
+        <Alert severity="error">{error}</Alert>
+      </div>
+    );
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>Orders</h2>
+    <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
+      <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>Orders</h2>
 
-      {/* 🔘 Two Filter Buttons */}
-      <div style={{ marginBottom: "1.5rem" }}>
+      
+      <div
+        style={{
+          marginBottom: "1.5rem",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "10px",
+          justifyContent: "center",
+        }}
+      >
         {["PENDING", "Approved"].map((status) => (
           <button
             key={status}
             onClick={() => setStatusFilter(status)}
             style={{
-              marginRight: "1rem",
               padding: "0.5rem 1rem",
               backgroundColor: statusFilter === status ? "#007bff" : "#f0f0f0",
               color: statusFilter === status ? "#fff" : "#333",
@@ -126,6 +84,7 @@ const AllOrdersList = () => {
               borderRadius: "5px",
               cursor: "pointer",
               fontWeight: "bold",
+              minWidth: "100px",
             }}
           >
             {status}
@@ -133,15 +92,16 @@ const AllOrdersList = () => {
         ))}
       </div>
 
+      
       {filteredOrders.length === 0 ? (
-        <p>No {statusFilter.toLowerCase()} orders found.</p>
+        <p style={{ textAlign: "center" }}>
+          No {statusFilter.toLowerCase()} orders found.
+        </p>
       ) : (
         filteredOrders.map((order) => (
-          <OrdersCard
-            key={order.orderId}
-            order={order}
-            onApprove={handleApproveOrder}
-          />
+          <div key={order.orderId} style={{ marginBottom: "1.5rem" }}>
+            <OrdersCard order={order} onApprove={handleApproveOrder} />
+          </div>
         ))
       )}
     </div>
@@ -149,5 +109,4 @@ const AllOrdersList = () => {
 };
 
 export default AllOrdersList;
-
 

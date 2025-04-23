@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-@Disabled
+
 public class UserServiceImplTest {
 
     @Mock

@@ -25,7 +25,7 @@ export const buyProduct = async (userId, productId, size, quantity, shippingAddr
 
     return response.data; 
   } catch (error) {
-    console.error('🛑 Error purchasing product:', error);
+    console.error(' Error purchasing product:', error);
     throw error;
   }
 };
@@ -88,7 +88,7 @@ export const cancelOrder = async (orderId) => {
 
     return response.data; 
   } catch (error) {
-    console.error(`🛑 Error cancelling order ${orderId}:`, error);
+    console.error(` Error cancelling order ${orderId}:`, error);
     throw error;
   }
 };

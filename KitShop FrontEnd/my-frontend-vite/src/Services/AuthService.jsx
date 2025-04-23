@@ -20,7 +20,7 @@ export const registerUser = async (userData) => {
             const userEmail = decodedToken.sub;
             if (userEmail) {
                 localStorage.setItem("userEmail", userEmail); 
-                // console.log("✅ Email extracted from JWT:", userEmail); 
+                
 
                 
                 const userIdResponse = await axios.get(`http://localhost:8080/api/users/id-by-email/${userEmail}`, {
@@ -29,15 +29,15 @@ export const registerUser = async (userData) => {
 
                 if (userIdResponse.data.userId) {
                     localStorage.setItem("userId", userIdResponse.data.userId); 
-                    // console.log("✅ Stored userId:", userIdResponse.data.userId); 
+                    
                 } else {
-                    console.error("❌ User ID not found for email:", userEmail);
+                    console.error(" User ID not found for email:", userEmail);
                 }
             } else {
-                console.error("❌ Email not found in JWT token!");
+                console.error(" Email not found in JWT token!");
             }
         } else {
-            console.error("❌ No JWT token received from login API.");
+            console.error(" No JWT token received from login API.");
         }
 
         
@@ -63,7 +63,7 @@ export const loginUser = async (email, password) => {
             const userEmail = decodedToken.sub;
             if (userEmail) {
                 localStorage.setItem("userEmail", userEmail); 
-                console.log("✅ Email extracted from JWT:", userEmail); 
+                console.log(" Email extracted from JWT:", userEmail); 
 
                 
                 const userIdResponse = await axios.get(`http://localhost:8080/api/users/id-by-email/${userEmail}`, {
@@ -72,15 +72,15 @@ export const loginUser = async (email, password) => {
 
                 if (userIdResponse.data.userId) {
                     localStorage.setItem("userId", userIdResponse.data.userId); 
-                    console.log("✅ Stored userId:", userIdResponse.data.userId); 
+                    console.log(" Stored userId:", userIdResponse.data.userId); 
                 } else {
-                    console.error("❌ User ID not found for email:", userEmail);
+                    console.error(" User ID not found for email:", userEmail);
                 }
             } else {
-                console.error("❌ Email not found in JWT token!");
+                console.error(" Email not found in JWT token!");
             }
         } else {
-            console.error("❌ No JWT token received from login API.");
+            console.error(" No JWT token received from login API.");
         }
 
         

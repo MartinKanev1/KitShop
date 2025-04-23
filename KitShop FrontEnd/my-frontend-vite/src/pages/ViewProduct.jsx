@@ -15,7 +15,6 @@ const ViewProduct = () => {
     const [loading, setLoading] = useState(true);
     const [selectedSize, setSelectedSize] = useState('S');
     const [quantity, setQuantity] = useState(1);
-    // const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
     const [isBuyNowOpen, setIsBuyNowOpen] = useState(false);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [reviewText, setReviewText] = useState('');
@@ -59,8 +58,8 @@ const ViewProduct = () => {
         alert('🎉 Order placed successfully!');
         setIsBuyNowOpen(false);
       } catch (error) {
-        console.error('❌ Error placing order:', error);
-        alert('❌ Failed to place order.');
+        console.error(' Error placing order:', error);
+        alert(' Failed to place order.');
       }
     };
     
@@ -82,20 +81,20 @@ const ViewProduct = () => {
       
         try {
           await addProductToCart(userId, product.productKitId, selectedSize, quantity);
-          alert('✅ Product added to cart!');
+          alert(' Product added to cart!');
         } catch (error) {
-          alert('❌ Failed to add product to cart');
+          alert(' Failed to add product to cart');
         }
       };
 
       const handleBuyNow = () => {
         if (!selectedSize) {
-          alert('❗Please select a size before buying.');
+          alert('Please select a size before buying.');
           return;
         }
       
         if (quantity <= 0) {
-          alert('❗Please select at least 1 quantity.');
+          alert('Please select at least 1 quantity.');
           return;
         }
         setIsBuyNowOpen(true);
@@ -110,17 +109,17 @@ const ViewProduct = () => {
       
         try {
           await addReview(product.productKitId, reviewText);
-          alert('✅ Review submitted successfully!');
+          alert(' Review submitted successfully!');
           setReviewText('');
           setShowReviewForm(false);
         } catch (error) {
-          alert('❌ Failed to submit review');
+          alert(' Failed to submit review');
         }
       };
 
 
       const handleViewReviews = async () => {
-        // if (!product?.productKitId) return;
+        
         if (showReviews) {
           setShowReviews(false);
           return;
@@ -154,7 +153,7 @@ const ViewProduct = () => {
       <>
         <Header showButtons={true} />
         <div className="view-product-container">
-          {/* Product Image */}
+          
           <div className="product-image">
             <img
               src={product.imageUrl}
@@ -163,12 +162,9 @@ const ViewProduct = () => {
             />
           </div>
   
-          {/* Product Details */}
+          
           <div className="product-details">
-            {/* <div><strong>Name:</strong> {product.name}</div>
-            <div><strong>Description:</strong> {product.description}</div>
-            <div><strong>Team:</strong> {product.teamNameOfKit}</div>
-            <div><strong>Player:</strong> {product.playerNameOnKit}</div> */}
+           
 
             <div><strong>Name:</strong> {product.name}</div>
             <div><strong>Description:</strong> {product.description}</div>
@@ -180,7 +176,7 @@ const ViewProduct = () => {
            
 
             <div className="selection-container">
-            {/* Size Selector */}
+            
             <div className="size-section">
               <label>Availlabel Sizes:</label>
               <div className="size-options">
@@ -200,7 +196,7 @@ const ViewProduct = () => {
               </div>
             </div>
             
-            {/* Quantity Selector */}
+            
             <div className="quantity-section">
               <label>Quantity</label>
               <div className="quantity-box">
@@ -233,7 +229,7 @@ const ViewProduct = () => {
           </div>
         </div>
 
-        {/* ⬇️ Add the review form right after the buttons */}
+        
     {showReviewForm && (
       <div className="review-form">
         <h3>📝 Leave a Review</h3>

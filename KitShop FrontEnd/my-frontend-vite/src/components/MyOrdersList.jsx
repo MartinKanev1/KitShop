@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MyOrdersCard from "../components/MyOrdersCard";
-import { getOrdersByUserId, cancelOrder } from "../Services/OrderService"; // ✅ correct
+import { getOrdersByUserId, cancelOrder } from "../Services/OrderService"; 
 
 
 const MyOrdersList = () => {

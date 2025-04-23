@@ -27,13 +27,13 @@ public class CloudinaryService {
     public String uploadFile(MultipartFile file) throws IOException {
 
         if (file == null || file.isEmpty()) {
-            System.out.println("❌ No file received for upload!");
+            System.out.println(" No file received for upload!");
             return null;
         }
 
-        System.out.println("🔄 Uploading file to Cloudinary: " + file.getOriginalFilename());
+        System.out.println(" Uploading file to Cloudinary: " + file.getOriginalFilename());
 
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-        return uploadResult.get("secure_url").toString(); // Return the Cloudinary image URL
+        return uploadResult.get("secure_url").toString();
     }
 }

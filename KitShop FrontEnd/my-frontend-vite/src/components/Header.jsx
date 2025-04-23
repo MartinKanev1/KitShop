@@ -9,10 +9,12 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import LogoutIcon from '@mui/icons-material/Logout';
 import '../Styles/Header.css';
+import useUserInfo from '../hooks/useUserInfo';
 
 const Header = ({ showButtons = true}) => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { user, loading } = useUserInfo();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
@@ -28,35 +30,7 @@ const Header = ({ showButtons = true}) => {
     
       <>
       
-      {/* <header className="header">
-      {showButtons && (
-      <button className="menu-button" onClick={toggleSidebar}>
-       <div className="menu-icon">
-       <Menu size={22} />
-       </div>
-       <span className="menu-text"></span>
-  
-        </button>
-        )}
-        
-
-         <h1 className="title">Football kits store</h1>
-         
-       
-
-{showButtons && (
-  <>
-    <Link to="/my-favourite-products" className="header__button">
-      <FavoriteBorderIcon style={{ fontSize: 20 }} />
-    </Link>
-    <Link to="/my-shopping-cart" className="header__button">
-      <ShoppingCart size={18} />
-      <span className="button-text">Cart</span>
-    </Link>
-  </>
-)}
-
-       </header> */}
+      
 
 <header className="header">
   {showButtons && (
@@ -115,18 +89,23 @@ const Header = ({ showButtons = true}) => {
           My Orders
         </Link>
       </li>
-      <li>
-        <Link to="/add-product">
-          <AddBoxIcon style={{ marginRight: '8px' }} />
-          Add Product
-        </Link>
-      </li>
-      <li>
-        <Link to="/orders">
-          <ListAltIcon style={{ marginRight: '8px' }} />
-          View Orders
-        </Link>
-      </li>
+      {user?.role === 'Admin' && (
+  <>
+    <li>
+      <Link to="/add-product">
+        <AddBoxIcon style={{ marginRight: '8px' }} />
+        Add Product
+      </Link>
+    </li>
+    <li>
+      <Link to="/orders">
+        <ListAltIcon style={{ marginRight: '8px' }} />
+        View Orders
+      </Link>
+    </li>
+  </>
+)}
+
     </ul>
   </div>
 

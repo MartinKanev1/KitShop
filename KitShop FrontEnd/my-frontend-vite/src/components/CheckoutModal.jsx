@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../Styles/BuyNowModal.css'; // reuse your existing modal styling
+import '../Styles/BuyNowModal.css'; 
 import useUserInfo from '../hooks/useUserInfo';
 
 const CheckoutModal = ({ isOpen, onClose, onConfirm, cartItems }) => {
@@ -22,7 +22,7 @@ const CheckoutModal = ({ isOpen, onClose, onConfirm, cartItems }) => {
       <div className="modal-content">
         <h2>🛍 Confirm Checkout</h2>
 
-        {/* User Info */}
+        
         <div className="modal-section">
           <h4>👤 Your Info</h4>
           {loading ? (
@@ -37,7 +37,7 @@ const CheckoutModal = ({ isOpen, onClose, onConfirm, cartItems }) => {
           )}
         </div>
 
-        {/* Shipping Address */}
+        
         <div className="modal-section">
           <label>📦 Shipping Address:</label>
           <textarea
@@ -48,7 +48,7 @@ const CheckoutModal = ({ isOpen, onClose, onConfirm, cartItems }) => {
           />
         </div>
  
-        {/* Cart Items Summary */}
+        
         <div className="modal-section">
           <h4>🛒 Order Summary</h4>
           {cartItems.map((item, index) => (
@@ -62,7 +62,7 @@ const CheckoutModal = ({ isOpen, onClose, onConfirm, cartItems }) => {
           <p><strong>Payment Method:</strong> Cash on Delivery</p>
         </div>
 
-        {/* Buttons */}
+        
         <div className="modal-buttons">
           <button onClick={handleConfirm}>✅ Confirm Purchase</button>
           <button onClick={onClose}>❌ Cancel</button>
